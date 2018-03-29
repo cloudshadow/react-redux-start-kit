@@ -1,11 +1,17 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import { createPortal } from 'react-dom';
+import PropTypes from 'prop-types';
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.el = document.createElement('div');
+  }
   render() {
-    return (
-      <div>
-        {this.props.children}
-      </div>
+    // createPortal can insert dom to any element
+    return createPortal(
+      this.props.children,
+      this.el //any element
     );
   }
 }

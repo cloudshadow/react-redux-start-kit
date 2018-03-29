@@ -1,7 +1,8 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import './home.scss';
 
-export default class HomeComponent extends React.Component{
+export default class HomeComponent extends React.Component {
   constructor(props) {
     super(props);
     this.props = props;

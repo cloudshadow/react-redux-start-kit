@@ -1,38 +1,35 @@
-import webpack from 'webpack';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import WebpackMd5Hash from 'webpack-md5-hash';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import autoprefixer from 'autoprefixer';
-import path from 'path';
+// import webpack from 'webpack';
+// import ExtractTextPlugin from 'extract-text-webpack-plugin';
+// import WebpackMd5Hash from 'webpack-md5-hash';
+// import HtmlWebpackPlugin from 'html-webpack-plugin';
+// import autoprefixer from 'autoprefixer';
+// import path from 'path';
 
-const GLOBALS = {
-  'process.env.NODE_ENV': JSON.stringify('production'),
-  __DEV__: false
-};
+// const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+// const WebpackMd5Hash = require('webpack-md5-hash');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
 const folderName = new Date().getTime();
 
-export default {
-  resolve: {
-    extensions: ['*', '.js', '.jsx', '.json']
-  },
+
+module.exports = {
+  mode: 'production',
   devtool: 'source-map', // more info:https://webpack.github.io/docs/build-performance.html#sourcemaps and https://webpack.github.io/docs/configuration.html#devtool
-  entry: path.resolve(__dirname, 'src/index'),
+  entry: [
+    // must be first entry to properly set public path
+    path.resolve(__dirname, 'src/index.js') // Defining path seems necessary for this to work consistently on Windows machines.
+  ],
   target: 'web', // necessary per https://webpack.github.io/docs/testing.html#compile-and-test
   output: {
-    path: path.resolve(__dirname, 'dist/' + folderName + '/'),
-    // publicPath: '/',
+    path: path.resolve(__dirname, 'dist/' + folderName + '/'), // Note: Physical files are only output by the production build task `npm run build`.
     publicPath: 'http://127.0.0.1/' + folderName + '/',
+    // publicPath: 'http://static-test.dominos.com.cn/' + folderName + '/',
     filename: '[name].[hash].js'
   },
   plugins: [
-    // Hash the files using MD5 so that their names change when the content changes.
-    new WebpackMd5Hash(),
-
-    // Tells React to build in prod mode. https://facebook.github.io/react/downloads.html
-    new webpack.DefinePlugin(GLOBALS),
-
     // Generate an external css file with a hash in the filename
-    new ExtractTextPlugin('[name].[contenthash].css'),
+    new ExtractTextPlugin('[name].[hash].css'),
 
     // Generate HTML file that contains references to generated bundles. See here for how this works: https://github.com/ampedandwired/html-webpack-plugin#basic-usage
     new HtmlWebpackPlugin({
@@ -55,44 +52,59 @@ export default {
       // To track JavaScript errors via TrackJS, sign up for a free trial at TrackJS.com and enter your token below.
       trackJSToken: ''
     }),
-
-    // Minify JS
-    new webpack.optimize.UglifyJsPlugin({ sourceMap: false }),
-
-    new webpack.LoaderOptionsPlugin({
-      minimize: true,
-      debug: false,
-      noInfo: true, // set to false to see a list of every file being bundled.
-      options: {
-        sassLoader: {
-          includePaths: [path.resolve(__dirname, 'src', 'scss')]
-        },
-        context: '/',
-        postcss: () => [autoprefixer],
-      }
-    })
   ],
   module: {
     rules: [
-      {test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader'},
-      {test: /\.eot(\?v=\d+.\d+.\d+)?$/, loader: 'url-loader?name=[name].[ext]'},
-      {test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff&name=[name].[ext]'},
-      {test: /\.[ot]tf(\?v=\d+.\d+.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/octet-stream&name=[name].[ext]'},
-      {test: /\.svg(\?v=\d+.\d+.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=image/svg+xml&name=[name].[ext]'},
-      {test: /\.(jpe?g|png|gif)$/i, loader: 'url-loader?limit=10000&name=[name].[ext]'},
-      {test: /\.ico$/, loader: 'file-loader?name=[name].[ext]'},
-      { 
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: ['babel-loader']
+      },
+      {
+        test: /\.eot(\?v=\d+.\d+.\d+)?$/,
+        //type: 'javascript/auto',
+        loader: 'file-loader'
+      },
+      {
+        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        //type: 'javascript/auto',
+        loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+      },
+      {
+        test: /\.[ot]tf(\?v=\d+.\d+.\d+)?$/,
+        //type: 'javascript/auto',
+        loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
+      },
+      {
+        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        //type: 'javascript/auto',
+        loader: 'url-loader?limit=10000&mimetype=image/svg+xml'
+      },
+      {
+        test: /\.(jpe?g|png|gif)$/i,
+        //type: 'javascript/auto',
+        loader: 'file-loader?name=[name].[ext]'
+      },
+      {
+        test: /\.ico$/,
+        //type: 'javascript/auto',
+        loader: 'file-loader?name=[name].[ext]'
+      },
+      {
         test: /\.scss$/,
         use: ExtractTextPlugin.extract({
           use: [{
             loader: "css-loader" // translates CSS into CommonJS
           }, {
-              loader: "sass-loader" // compiles Sass to CSS
+            loader: "sass-loader" // compiles Sass to CSS
           }],
           // use style-loader in development 
           fallback: "style-loader"
         })
       }
     ]
+  },
+  resolve: {
+    extensions: ['*', '.js', '.jsx']
   }
 };

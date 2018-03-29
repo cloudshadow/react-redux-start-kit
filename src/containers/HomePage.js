@@ -1,6 +1,7 @@
-import React, {PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import * as homeActions from '../actions/homeActions';
 import HomeComponent from '../components/Home/HomeComponent';
 
@@ -8,8 +9,8 @@ export class HomePage extends React.Component {
   render() {
     return (
       <HomeComponent
-        getTitle = {this.props.homeActions.getTitle}
-        homeState = {this.props.homeState}
+        getTitle={this.props.homeActions.getTitle}
+        homeState={this.props.homeState}
       />
     );
   }
