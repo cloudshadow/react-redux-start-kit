@@ -9,7 +9,6 @@
     "start:dev": "webpack-dev-server --color --config ./webpack.config.dev.js",
     "start:prod": "npm run clean-dist && webpack --config ./webpack.config.prod.js",
     "start:stable": "npm run clean-dist-stable && webpack --config ./webpack.config.stable.js",
-    "start": "npm-run-all --parallel open:src lint:watch",
     "lint": "esw webpack.config.* src tools --color",
     "lint:watch": "npm run lint -- --watch",
     "clean-dist": "npm run remove-dist && mkdir dist",
