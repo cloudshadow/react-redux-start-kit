@@ -2,7 +2,7 @@
 import 'es6-promise/auto'; //import es6-promise for ie
 import axios from 'axios';
 import urlHelper from '../utils/urlHelper';
-import { push } from 'react-router-redux';
+import history from '../utils/history';
 
 export const TEMP = 'TEMP';
 

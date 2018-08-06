@@ -79,7 +79,7 @@ module.exports = {
     progress: true,
     open: true,
     hot: true, //see more https://github.com/webpack/webpack/issues/1151
-    host: '172.19.100.19',
     watchContentBase: true,
+    historyApiFallback: true,
   }
 };

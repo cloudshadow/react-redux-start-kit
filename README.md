@@ -4,6 +4,17 @@
 
   > Simple [React](http://facebook.github.io/react/index.html) [Redux](https://redux.js.org/) Starter Kit for create application.
 
+## What's new
+  > Updated to react v16.0 and react-router v4.0 
+
+## Libraries
+  * [React](https://reactjs.org/) v16.0+
+  * [React Router](https://reacttraining.com/react-router/) v4.0+
+  * [Redux](https://redux.js.org/)
+  * [Axios](https://github.com/axios/axios)
+  * [Babel](https://babeljs.io/)
+
+
 ## Get Started
 
 1. git clone https://github.com/cloudshadow/react-redux-starter-kit.git

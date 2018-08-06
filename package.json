@@ -1,7 +1,7 @@
 {
   "name": "react-redux-starter-kit",
   "version": "2.0.0",
-  "description": "Starter kit for creating apps with React and Redux",
+  "description": "starter kit for react v16",
   "engines": {
     "npm": ">=3"
   },
@@ -30,9 +30,12 @@
     "react-helmet": "5.2.0",
     "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
+    "react-slick": "^0.22.3",
     "redux": "3.6.0",
-    "redux-thunk": "2.1.0"
+    "redux-thunk": "2.1.0",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "autoprefixer": "6.5.4",
@@ -57,11 +60,11 @@
     "eslint-plugin-import": "2.2.0",
     "eslint-plugin-react": "6.8.0",
     "eslint-watch": "2.1.14",
-    "extract-text-webpack-plugin": "^4.0.0-beta.0",
-    "file-loader": "0.9.0",
+    "file-loader": "^1.1.11",
     "html-webpack-plugin": "^3.0.7",
     "identity-obj-proxy": "3.0.0",
     "json-loader": "0.5.4",
+    "mini-css-extract-plugin": "^0.4.0",
     "node-sass": "^4.0.0",
     "npm-run-all": "3.1.2",
     "open": "0.0.5",
@@ -74,7 +77,7 @@
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.3",
     "url-loader": "^1.0.1",
-    "webpack": "^4.1.1",
+    "webpack": "^4.11.1",
     "webpack-bundle-analyzer": "2.1.1",
     "webpack-cli": "^2.0.12",
     "webpack-dev-middleware": "^3.0.1",

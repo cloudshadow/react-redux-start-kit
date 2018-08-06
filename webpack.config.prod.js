@@ -1,38 +1,34 @@
-// import webpack from 'webpack';
-// import ExtractTextPlugin from 'extract-text-webpack-plugin';
-// import WebpackMd5Hash from 'webpack-md5-hash';
-// import HtmlWebpackPlugin from 'html-webpack-plugin';
-// import autoprefixer from 'autoprefixer';
-// import path from 'path';
-
-// const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-// const WebpackMd5Hash = require('webpack-md5-hash');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
 const folderName = new Date().getTime();
 
-
 module.exports = {
   mode: 'production',
-  devtool: 'source-map', // more info:https://webpack.github.io/docs/build-performance.html#sourcemaps and https://webpack.github.io/docs/configuration.html#devtool
   entry: [
     // must be first entry to properly set public path
     path.resolve(__dirname, 'src/index.js') // Defining path seems necessary for this to work consistently on Windows machines.
   ],
-  target: 'web', // necessary per https://webpack.github.io/docs/testing.html#compile-and-test
   output: {
-    path: path.resolve(__dirname, 'dist/' + folderName + '/'), // Note: Physical files are only output by the production build task `npm run build`.
+    path: path.resolve(__dirname, 'dist/' + folderName + '/'),
     publicPath: 'http://127.0.0.1/' + folderName + '/',
-    // publicPath: 'http://static-test.dominos.com.cn/' + folderName + '/',
-    filename: '[name].[hash].js'
+    filename: '[name].[contenthash].js'
   },
   plugins: [
-    // Generate an external css file with a hash in the filename
-    new ExtractTextPlugin('[name].[hash].css'),
+    // Hash the files using MD5 so that their names change when the content changes.
+    // new WebpackMd5Hash(),
 
-    // Generate HTML file that contains references to generated bundles. See here for how this works: https://github.com/ampedandwired/html-webpack-plugin#basic-usage
-    new HtmlWebpackPlugin({
+    // Generate an external css file with a hash in the filename
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: "[name].[contenthash].css",
+      // chunkFilename: "[id].css"
+    }),
+
+    new HtmlWebpackPlugin({     // Create HTML file that includes references to bundled CSS and JS.
       filename: '../index.html',
       template: 'src/index.ejs',
       minify: {
@@ -47,12 +43,36 @@ module.exports = {
         minifyCSS: true,
         minifyURLs: true
       },
-      inject: true,
-      // Note that you can add custom options here if you need to handle other custom logic in index.html
-      // To track JavaScript errors via TrackJS, sign up for a free trial at TrackJS.com and enter your token below.
-      trackJSToken: ''
+      inject: true
     }),
+
+    new webpack.LoaderOptionsPlugin({
+      minimize: true,
+      debug: false,
+      noInfo: true, // set to false to see a list of every file being bundled.
+      options: {
+        sassLoader: {
+          includePaths: [path.resolve(__dirname, 'src', 'scss')]
+        },
+        context: '/'
+      }
+    })
   ],
+  optimization: {
+    minimizer: [
+      // we specify a custom UglifyJsPlugin here to get source maps in production
+      new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
+        uglifyOptions: {
+          compress: false,
+          ecma: 6,
+          mangle: true
+        },
+        sourceMap: true
+      })
+    ]
+  },
   module: {
     rules: [
       {
@@ -91,16 +111,9 @@ module.exports = {
         loader: 'file-loader?name=[name].[ext]'
       },
       {
-        test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          use: [{
-            loader: "css-loader" // translates CSS into CommonJS
-          }, {
-            loader: "sass-loader" // compiles Sass to CSS
-          }],
-          // use style-loader in development 
-          fallback: "style-loader"
-        })
+        test: /(\.css|\.scss|\.sass)$/,
+        //type: 'javascript/auto',
+        loaders: [MiniCssExtractPlugin.loader, 'css-loader?sourceMap', 'sass-loader?sourceMap']
       }
     ]
   },
