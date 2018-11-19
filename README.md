@@ -19,7 +19,7 @@
 
 1. git clone https://github.com/cloudshadow/react-redux-starter-kit.git
 2. npm install
-3. npm start
+3. npm start:dev
 
 ## Useful Command
 1. npm run build (build production package)
